@@ -18,7 +18,7 @@ namespace TCCWS
     {
         public List<string> GetData()
         {
-            NpgsqlCommand command = new NpgsqlCommand("SELECT nome FROM clientes");
+            NpgsqlCommand command = new NpgsqlCommand("SELECT nome FROM cliente");
             DataSet ds = BancoDeDados.Query(command);
             if (ds == null) return null;
             DataTableReader dtr = ds.CreateDataReader();
@@ -34,20 +34,7 @@ namespace TCCWS
         {
 
         }
-
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-        {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
-        }
-
+        /*
         public int InsertCliente(Cliente cliente)
         {
             NpgsqlCommand command = new NpgsqlCommand();
@@ -154,20 +141,36 @@ namespace TCCWS
 
             return BancoDeDados.NonQuery(command);
         }
+        */
+        
 
-        public List<Cliente> GetClientes()
+
+        public Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao)
         {
-            NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM clientes ORDER BY nome");
+            if (BancoDeDados.BeginTransaction())
+            {
+                foreach (string sql in atualizacoes)
+                {
+                    NpgsqlCommand comando = new NpgsqlCommand(sql);
+                    BancoDeDados.NonQuery(comando);
+                }
+                BancoDeDados.CommitTransaction();
+            }
+
+            Atualizacao atualizacao = new Atualizacao();
+            NpgsqlCommand command = new NpgsqlCommand(@"SELECT * FROM cliente WHERE alteracao > @alt ORDER BY nome");
+            command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
             DataSet ds = BancoDeDados.Query(command);
             if (ds == null) return null;
             DataTableReader dtr = ds.CreateDataReader();
-            List<Cliente> clientes = new List<Cliente>();
+            List<ClienteWS> clientes = new List<ClienteWS>();
 
             while (dtr.Read())
             {
-                clientes.Add(new Cliente()
+                clientes.Add(new ClienteWS()
                 {
                     Id = dtr.GetInt32(0),
+                    Origem = dtr.GetInt32(12),
                     Nome = dtr.GetString(1),
                     Cpf = dtr.GetString(2),
                     Rua = dtr.GetString(3),
@@ -179,9 +182,15 @@ namespace TCCWS
                     Telefone = dtr.IsDBNull(9) ? "" : dtr.GetString(9),
                     Email = dtr.IsDBNull(10) ? "" : dtr.GetString(10)
                 });
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(11))
+                {
+                    atualizacao.dtAtualizado = dtr.GetDateTime(11);
+                }
             }
-            return clientes;
+
+            atualizacao.clientes = clientes;
+
+            return atualizacao;
         }
-        
     }
 }

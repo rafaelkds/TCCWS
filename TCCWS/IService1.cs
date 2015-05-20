@@ -12,54 +12,32 @@ namespace TCCWS
     [ServiceContract]
     public interface IService1
     {
+        [OperationContract]
+        Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao);
 
         [OperationContract]
         List<string> GetData();
 
-        [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
-
-        [OperationContract]
-        int InsertCliente(Cliente cliente);
-
-        [OperationContract]
-        List<Cliente> GetClientes();
-        /*
-        [OperationContractAttribute(AsyncPattern = true)]
-        IAsyncResult BeginGetClientes(AsyncCallback callback, object asyncState);
-
-        List<Cliente> EndGetClientes(IAsyncResult result);*/
-        // TODO: Add your service operations here
+        
     }
 
 
-    // Use a data contract as illustrated in the sample below to add composite types to service operations.
     [DataContract]
-    public class CompositeType
+    public class Atualizacao
     {
-        bool boolValue = true;
-        string stringValue = "Hello ";
-
         [DataMember]
-        public bool BoolValue
-        {
-            get { return boolValue; }
-            set { boolValue = value; }
-        }
-
+        public DateTime dtAtualizado { get; set; }
         [DataMember]
-        public string StringValue
-        {
-            get { return stringValue; }
-            set { stringValue = value; }
-        }
+        public List<ClienteWS> clientes { get; set; }
     }
 
     [DataContract]
-    public class Cliente
+    public class ClienteWS
     {
         [DataMember]
         public int Id { get; set; }
+        [DataMember]
+        public int Origem { get; set; }
         [DataMember]
         public string Nome { get; set; }
         [DataMember]
