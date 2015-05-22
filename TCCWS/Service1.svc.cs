@@ -158,7 +158,7 @@ namespace TCCWS
             }
 
             Atualizacao atualizacao = new Atualizacao();
-            NpgsqlCommand command = new NpgsqlCommand(@"SELECT * FROM cliente WHERE alteracao > @alt ORDER BY nome");
+            NpgsqlCommand command = new NpgsqlCommand(@"SELECT * FROM cliente WHERE alteracao > @alt ORDER BY Id");
             command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
             DataSet ds = BancoDeDados.Query(command);
             if (ds == null) return null;
@@ -169,22 +169,21 @@ namespace TCCWS
             {
                 clientes.Add(new ClienteWS()
                 {
-                    Id = dtr.GetInt32(0),
-                    Origem = dtr.GetInt32(12),
-                    Nome = dtr.GetString(1),
-                    Cpf = dtr.GetString(2),
-                    Rua = dtr.GetString(3),
-                    Numero = dtr.GetString(4),
-                    Bairro = dtr.GetString(5),
-                    Cidade = dtr.GetInt32(6),
-                    Cep = dtr.IsDBNull(7) ? "" : dtr.GetString(7),
-                    Complemento = dtr.IsDBNull(8) ? "" : dtr.GetString(8),
-                    Telefone = dtr.IsDBNull(9) ? "" : dtr.GetString(9),
-                    Email = dtr.IsDBNull(10) ? "" : dtr.GetString(10)
+                    Id = dtr.GetString(11),
+                    Nome = dtr.GetString(0),
+                    Cpf = dtr.GetString(1),
+                    Rua = dtr.GetString(2),
+                    Numero = dtr.GetString(3),
+                    Bairro = dtr.GetString(4),
+                    Cidade = dtr.GetInt32(5),
+                    Cep = dtr.IsDBNull(6) ? "" : dtr.GetString(6),
+                    Complemento = dtr.IsDBNull(7) ? "" : dtr.GetString(7),
+                    Telefone = dtr.IsDBNull(8) ? "" : dtr.GetString(8),
+                    Email = dtr.IsDBNull(9) ? "" : dtr.GetString(9)
                 });
-                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(11))
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(10))
                 {
-                    atualizacao.dtAtualizado = dtr.GetDateTime(11);
+                    atualizacao.dtAtualizado = dtr.GetDateTime(10);
                 }
             }
 

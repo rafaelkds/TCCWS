@@ -35,9 +35,7 @@ namespace TCCWS
     public class ClienteWS
     {
         [DataMember]
-        public int Id { get; set; }
-        [DataMember]
-        public int Origem { get; set; }
+        public string Id { get; set; }
         [DataMember]
         public string Nome { get; set; }
         [DataMember]
