@@ -158,6 +158,8 @@ namespace TCCWS
             }
 
             Atualizacao atualizacao = new Atualizacao();
+
+            #region Cliente
             NpgsqlCommand command = new NpgsqlCommand(@"SELECT * FROM cliente WHERE alteracao > @alt ORDER BY Id");
             command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
             DataSet ds = BancoDeDados.Query(command);
@@ -188,6 +190,89 @@ namespace TCCWS
             }
 
             atualizacao.clientes = clientes;
+            #endregion
+
+            #region Produto
+            command = new NpgsqlCommand(@"SELECT * FROM produto WHERE alteracao > @alt ORDER BY Id");
+            command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
+            ds = BancoDeDados.Query(command);
+            if (ds == null) return null;
+            dtr = ds.CreateDataReader();
+            List<ProdutoWS> produtos = new List<ProdutoWS>();
+
+            while (dtr.Read())
+            {
+                produtos.Add(new ProdutoWS()
+                {
+                    Id = dtr.GetInt32(0),
+                    Nome = dtr.GetString(1),
+                    Estoque = dtr.GetDecimal(2)
+                });
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(3))
+                {
+                    atualizacao.dtAtualizado = dtr.GetDateTime(3);
+                }
+            }
+
+            atualizacao.produtos = produtos;
+            #endregion
+
+            #region Pedido
+            command = new NpgsqlCommand(@"SELECT * FROM pedido WHERE alteracao > @alt ORDER BY Id");
+            command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
+            ds = BancoDeDados.Query(command);
+            if (ds == null) return null;
+            dtr = ds.CreateDataReader();
+            List<PedidoWS> pedidos = new List<PedidoWS>();
+
+            while (dtr.Read())
+            {
+                pedidos.Add(new PedidoWS()
+                {
+                    Id = dtr.GetString(6),
+                    IdCliente = dtr.GetString(8),
+                    IdVendedor = dtr.GetInt32(1),
+                    Numero = dtr.GetString(0),
+                    Valor = dtr.GetDecimal(2),
+                    DataEmissao = dtr.GetDateTime(3),
+                    DataPago = dtr.GetDateTime(4),
+                    Observacoes = dtr.GetString(5)
+                });
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(7))
+                {
+                    atualizacao.dtAtualizado = dtr.GetDateTime(7);
+                }
+            }
+
+            atualizacao.pedidos = pedidos;
+            #endregion
+
+            #region Produtos Pedido
+            command = new NpgsqlCommand(@"SELECT * FROM produto_pedido WHERE alteracao > @alt ORDER BY Id");
+            command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
+            ds = BancoDeDados.Query(command);
+            if (ds == null) return null;
+            dtr = ds.CreateDataReader();
+            List<ProdutoPedidoWS> produtospedido = new List<ProdutoPedidoWS>();
+
+            while (dtr.Read())
+            {
+                produtospedido.Add(new ProdutoPedidoWS()
+                {
+                    Id = dtr.GetString(3),
+                    IdPedido = dtr.GetString(4),
+                    IdProduto = dtr.GetInt32(0),
+                    Valor = dtr.GetDecimal(1),
+                    Quantidade = dtr.GetDecimal(2)
+                });
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(5))
+                {
+                    atualizacao.dtAtualizado = dtr.GetDateTime(5);
+                }
+            }
+
+            atualizacao.produtospedido = produtospedido;
+            #endregion
 
             return atualizacao;
         }

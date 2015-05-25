@@ -29,6 +29,12 @@ namespace TCCWS
         public DateTime dtAtualizado { get; set; }
         [DataMember]
         public List<ClienteWS> clientes { get; set; }
+        [DataMember]
+        public List<ProdutoWS> produtos { get; set; }
+        [DataMember]
+        public List<PedidoWS> pedidos { get; set; }
+        [DataMember]
+        public List<ProdutoPedidoWS> produtospedido { get; set; }
     }
 
     [DataContract]
@@ -56,5 +62,52 @@ namespace TCCWS
         public string Telefone { get; set; }
         [DataMember]
         public string Email { get; set; }
+    }
+
+    [DataContract]
+    public class ProdutoWS
+    {
+        [DataMember]
+        public int Id { get; set; }
+        [DataMember]
+        public string Nome { get; set; }
+        [DataMember]
+        public decimal Estoque { get; set; }
+    }
+
+    [DataContract]
+    public class PedidoWS
+    {
+        [DataMember]
+        public string Id { get; set; }
+        [DataMember]
+        public string Numero { get; set; }
+        [DataMember]
+        public string IdCliente { get; set; }
+        [DataMember]
+        public int IdVendedor { get; set; }
+        [DataMember]
+        public decimal Valor { get; set; }
+        [DataMember]
+        public DateTime DataEmissao { get; set; }
+        [DataMember]
+        public DateTime DataPago { get; set; }
+        [DataMember]
+        public string Observacoes { get; set; }
+    }
+
+    [DataContract]
+    public class ProdutoPedidoWS
+    {
+        [DataMember]
+        public string Id { get; set; }
+        [DataMember]
+        public string IdPedido { get; set; }
+        [DataMember]
+        public int IdProduto { get; set; }
+        [DataMember]
+        public decimal Valor { get; set; }
+        [DataMember]
+        public decimal Quantidade { get; set; }
     }
 }
