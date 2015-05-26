@@ -206,11 +206,13 @@ namespace TCCWS
                 {
                     Id = dtr.GetInt32(0),
                     Nome = dtr.GetString(1),
-                    Estoque = dtr.GetDecimal(2)
+                    Estoque = dtr.GetDecimal(2),
+                    Ativo = dtr.GetBoolean(3),
+                    Valor = dtr.GetDecimal(4)
                 });
-                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(3))
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(5))
                 {
-                    atualizacao.dtAtualizado = dtr.GetDateTime(3);
+                    atualizacao.dtAtualizado = dtr.GetDateTime(5);
                 }
             }
 

@@ -73,6 +73,10 @@ namespace TCCWS
         public string Nome { get; set; }
         [DataMember]
         public decimal Estoque { get; set; }
+        [DataMember]
+        public bool Ativo { get; set; }
+        [DataMember]
+        public decimal Valor { get; set; }
     }
 
     [DataContract]
