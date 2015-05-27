@@ -35,6 +35,8 @@ namespace TCCWS
         public List<PedidoWS> pedidos { get; set; }
         [DataMember]
         public List<ProdutoPedidoWS> produtospedido { get; set; }
+        [DataMember]
+        public List<ReceberWS> receber { get; set; }
     }
 
     [DataContract]
@@ -113,5 +115,22 @@ namespace TCCWS
         public decimal Valor { get; set; }
         [DataMember]
         public decimal Quantidade { get; set; }
+    }
+
+    [DataContract]
+    public class ReceberWS
+    {
+        [DataMember]
+        public string Id { get; set; }
+        [DataMember]
+        public string IdPedido { get; set; }
+        [DataMember]
+        public int Ordem { get; set; }
+        [DataMember]
+        public decimal Valor { get; set; }
+        [DataMember]
+        public DateTime Vencimento { get; set; }
+        [DataMember]
+        public DateTime Pagamento { get; set; }
     }
 }

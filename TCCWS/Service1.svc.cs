@@ -276,6 +276,34 @@ namespace TCCWS
             atualizacao.produtospedido = produtospedido;
             #endregion
 
+            #region Receber
+            command = new NpgsqlCommand(@"SELECT * FROM receber WHERE alteracao > @alt ORDER BY Id");
+            command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
+            ds = BancoDeDados.Query(command);
+            if (ds == null) return null;
+            dtr = ds.CreateDataReader();
+            List<ReceberWS> receber = new List<ReceberWS>();
+
+            while (dtr.Read())
+            {
+                receber.Add(new ReceberWS()
+                {
+                    Id = dtr.GetString(6),
+                    IdPedido = dtr.GetString(0),
+                    Ordem = dtr.GetInt32(1),
+                    Valor = dtr.GetDecimal(2),
+                    Vencimento = dtr.GetDateTime(3),
+                    Pagamento = dtr.GetDateTime(4),
+                });
+                if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(5))
+                {
+                    atualizacao.dtAtualizado = dtr.GetDateTime(5);
+                }
+            }
+
+            atualizacao.receber = receber;
+            #endregion
+
             return atualizacao;
         }
     }
