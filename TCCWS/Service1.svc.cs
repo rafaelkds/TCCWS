@@ -178,10 +178,10 @@ namespace TCCWS
                     Numero = dtr.GetString(3),
                     Bairro = dtr.GetString(4),
                     Cidade = dtr.GetInt32(5),
-                    Cep = dtr.IsDBNull(6) ? "" : dtr.GetString(6),
-                    Complemento = dtr.IsDBNull(7) ? "" : dtr.GetString(7),
-                    Telefone = dtr.IsDBNull(8) ? "" : dtr.GetString(8),
-                    Email = dtr.IsDBNull(9) ? "" : dtr.GetString(9)
+                    Cep = (dtr.IsDBNull(6) || string.IsNullOrWhiteSpace(dtr.GetString(6))) ? null : dtr.GetString(6),
+                    Complemento = (dtr.IsDBNull(7) || string.IsNullOrWhiteSpace(dtr.GetString(7))) ? null : dtr.GetString(7),
+                    Telefone = (dtr.IsDBNull(8) || string.IsNullOrWhiteSpace(dtr.GetString(8))) ? null : dtr.GetString(8),
+                    Email = (dtr.IsDBNull(9) || string.IsNullOrWhiteSpace(dtr.GetString(9))) ? null : dtr.GetString(9)
                 });
                 if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(10))
                 {
