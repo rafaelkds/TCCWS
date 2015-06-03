@@ -13,12 +13,7 @@ namespace TCCWS
     public interface IService1
     {
         [OperationContract]
-        Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao);
-
-        [OperationContract]
-        List<string> GetData();
-
-        
+        Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao, string identificacao);
     }
 
 
@@ -37,6 +32,20 @@ namespace TCCWS
         public List<ProdutoPedidoWS> produtospedido { get; set; }
         [DataMember]
         public List<ReceberWS> receber { get; set; }
+        [DataMember]
+        public List<AnotacaoWS> anotacoes { get; set; }
+        [DataMember]
+        public int id { get; set; }
+        [DataMember]
+        public int? maxIdCliente { get; set; }
+        [DataMember]
+        public int? maxIdPedido { get; set; }
+        [DataMember]
+        public int? maxIdProdutoPedido { get; set; }
+        [DataMember]
+        public int? maxIdReceber { get; set; }
+        [DataMember]
+        public int? maxIdAnotacao { get; set; }
     }
 
     [DataContract]
@@ -132,5 +141,20 @@ namespace TCCWS
         public DateTime Vencimento { get; set; }
         [DataMember]
         public DateTime Pagamento { get; set; }
+    }
+
+    [DataContract]
+    public class AnotacaoWS
+    {
+        [DataMember]
+        public string Id { get; set; }
+        [DataMember]
+        public string IdPedido { get; set; }
+        [DataMember]
+        public DateTime Data { get; set; }
+        [DataMember]
+        public DateTime DataUltimaAlteracao { get; set; }
+        [DataMember]
+        public string Texto { get; set; }
     }
 }
