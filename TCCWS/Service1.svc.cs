@@ -26,8 +26,7 @@ namespace TCCWS
                     NpgsqlCommand comando = new NpgsqlCommand(sql);
                     BancoDeDados.NonQuery(comando);
                 }
-                BancoDeDados.CommitTransaction();
-            }
+                
 
             Atualizacao atualizacao = new Atualizacao();
             bool maxIds = false;
@@ -56,8 +55,8 @@ namespace TCCWS
                 dtr.Read();
                 atualizacao.id = dtr.GetInt32(0);
             }
-            #endregion
-            
+            #endregion    
+
             #region Cliente
             command = new NpgsqlCommand(@"SELECT * FROM cliente WHERE alteracao > @alt ORDER BY Id");
             command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
@@ -265,7 +264,10 @@ namespace TCCWS
             atualizacao.anotacoes = anotacoes;
             #endregion
 
-            return atualizacao;
+                BancoDeDados.CommitTransaction();
+                return atualizacao;
+            }
+            return null;
         }
     }
 }
