@@ -8,9 +8,9 @@ using System.Text;
 
 namespace TCCWS
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "ITCCWS" in both code and config file together.
     [ServiceContract]
-    public interface IService1
+    public interface ITCCWS
     {
         [OperationContract]
         Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao, string identificacao);
@@ -34,6 +34,8 @@ namespace TCCWS
         public List<ReceberWS> receber { get; set; }
         [DataMember]
         public List<AnotacaoWS> anotacoes { get; set; }
+        [DataMember]
+        public List<VendedorWS> vendedores { get; set; }
         [DataMember]
         public int id { get; set; }
         [DataMember]
@@ -156,5 +158,14 @@ namespace TCCWS
         public DateTime DataUltimaAlteracao { get; set; }
         [DataMember]
         public string Texto { get; set; }
+    }
+
+    [DataContract]
+    public class VendedorWS
+    {
+        [DataMember]
+        public int Id { get; set; }
+        [DataMember]
+        public string Nome { get; set; }
     }
 }
