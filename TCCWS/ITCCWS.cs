@@ -16,7 +16,6 @@ namespace TCCWS
         Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao, string identificacao);
     }
 
-
     [DataContract]
     public class Atualizacao
     {
@@ -37,7 +36,7 @@ namespace TCCWS
         [DataMember]
         public List<VendedorWS> vendedores { get; set; }
         [DataMember]
-        public int id { get; set; }
+        public int idCelular { get; set; }
         [DataMember]
         public int? maxIdCliente { get; set; }
         [DataMember]
@@ -66,7 +65,9 @@ namespace TCCWS
         [DataMember]
         public string Bairro { get; set; }
         [DataMember]
-        public int Cidade { get; set; }
+        public string Cidade { get; set; }
+        [DataMember]
+        public string Uf { get; set; }
         [DataMember]
         public string Cep { get; set; }
         [DataMember]
@@ -75,6 +76,8 @@ namespace TCCWS
         public string Telefone { get; set; }
         [DataMember]
         public string Email { get; set; }
+        [DataMember]
+        public bool Ativo { get; set; }
     }
 
     [DataContract]
@@ -87,9 +90,9 @@ namespace TCCWS
         [DataMember]
         public decimal Estoque { get; set; }
         [DataMember]
-        public bool Ativo { get; set; }
-        [DataMember]
         public decimal Valor { get; set; }
+        [DataMember]
+        public bool Ativo { get; set; }
     }
 
     [DataContract]
@@ -108,7 +111,7 @@ namespace TCCWS
         [DataMember]
         public DateTime DataEmissao { get; set; }
         [DataMember]
-        public DateTime DataPago { get; set; }
+        public DateTime DataPagamento { get; set; }
         [DataMember]
         public string Observacoes { get; set; }
     }
@@ -126,6 +129,8 @@ namespace TCCWS
         public decimal Valor { get; set; }
         [DataMember]
         public decimal Quantidade { get; set; }
+        [DataMember]
+        public decimal QuantidadeEntregue { get; set; }
     }
 
     [DataContract]
