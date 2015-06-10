@@ -11,8 +11,8 @@ namespace TCCWS
 {
     public class BancoDeDados
     {
-        private static NpgsqlConnection conn;
-        private static NpgsqlConnection Conn
+        private NpgsqlConnection conn;
+        private NpgsqlConnection Conn
         {
             get
             {
@@ -25,8 +25,8 @@ namespace TCCWS
             }
         }
 
-        private static NpgsqlTransaction transaction;
-        public static bool BeginTransaction()
+        private NpgsqlTransaction transaction;
+        public bool BeginTransaction()
         {
             if (transaction == null)
             {
@@ -36,29 +36,31 @@ namespace TCCWS
             return false;
         }
 
-        public static bool CommitTransaction()
+        public bool CommitTransaction()
         {
             if (transaction != null)
             {
                 transaction.Commit();
                 transaction = null;
+                Conn.Close();
                 return true;
             }
             return false;
         }
 
-        public static bool RollbackTransaction()
+        public bool RollbackTransaction()
         {
             if (transaction != null)
             {
                 transaction.Rollback();
                 transaction = null;
+                Conn.Close();
                 return true;
             }
             return false;
         }
 
-        public static DataSet Query(NpgsqlCommand command)
+        public DataSet Query(NpgsqlCommand command)
         {
             try
             {
@@ -74,7 +76,7 @@ namespace TCCWS
             return null;
         }
 
-        public static int NonQuery(NpgsqlCommand command)
+        public int NonQuery(NpgsqlCommand command)
         {
             try
             {

@@ -12,12 +12,13 @@ namespace TCCWS
     {
         public Atualizacao Sincronizar(List<string> atualizacoes, DateTime ultimaAtualizacao, string identificacao)
         {
-            if (BancoDeDados.BeginTransaction())
+            BancoDeDados bd = new BancoDeDados();
+            if (bd.BeginTransaction())
             {
                 foreach (string sql in atualizacoes)
                 {
                     NpgsqlCommand comando = new NpgsqlCommand(sql);
-                    BancoDeDados.NonQuery(comando);
+                    bd.NonQuery(comando);
                 }
 
                 Atualizacao atualizacao = new Atualizacao();
@@ -25,7 +26,7 @@ namespace TCCWS
 
                 #region Identificacao
                 NpgsqlCommand command = new NpgsqlCommand("SELECT id FROM celular WHERE identificacao = '" + identificacao + "'");
-                DataSet ds = BancoDeDados.Query(command);
+                DataSet ds = bd.Query(command);
                 if (ds == null) return null;
                 DataTableReader dtr = ds.CreateDataReader();
 
@@ -39,9 +40,9 @@ namespace TCCWS
                 else
                 {
                     command = new NpgsqlCommand("INSERT INTO celular(identificacao) VALUES ('" + identificacao + "')");
-                    BancoDeDados.NonQuery(command);
+                    bd.NonQuery(command);
                     command = new NpgsqlCommand("SELECT id FROM celular WHERE identificacao = '" + identificacao + "'");
-                    ds = BancoDeDados.Query(command);
+                    ds = bd.Query(command);
                     if (ds == null) return null;
                     dtr = ds.CreateDataReader();
                     dtr.Read();
@@ -53,7 +54,7 @@ namespace TCCWS
                 command = new NpgsqlCommand(@"SELECT id, nome, cpf, rua, numero, bairro, cidade, uf, cep, complemento, telefone, email, ativo, alteracao 
 FROM cliente WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<ClienteWS> clientes = new List<ClienteWS>();
@@ -96,7 +97,7 @@ FROM cliente WHERE alteracao > @alt ORDER BY Id");
                 command = new NpgsqlCommand(@"SELECT id, nome, estoque, valor, ativo, alteracao 
 FROM produto WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<ProdutoWS> produtos = new List<ProdutoWS>();
@@ -124,7 +125,7 @@ FROM produto WHERE alteracao > @alt ORDER BY Id");
                 command = new NpgsqlCommand(@"SELECT id, numero, id_cliente, id_vendedor, valor, data_emissao, data_pagamento, observacoes, alteracao 
 FROM pedido WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<PedidoWS> pedidos = new List<PedidoWS>();
@@ -162,7 +163,7 @@ FROM pedido WHERE alteracao > @alt ORDER BY Id");
                 command = new NpgsqlCommand(@"SELECT id, id_pedido, id_produto, valor, quantidade, quantidade_entregue, alteracao 
 FROM produto_pedido WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<ProdutoPedidoWS> produtospedido = new List<ProdutoPedidoWS>();
@@ -198,7 +199,7 @@ FROM produto_pedido WHERE alteracao > @alt ORDER BY Id");
                 command = new NpgsqlCommand(@"SELECT id, id_pedido, ordem, valor, vencimento, pagamento, alteracao 
 FROM receber WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<ReceberWS> receber = new List<ReceberWS>();
@@ -234,7 +235,7 @@ FROM receber WHERE alteracao > @alt ORDER BY Id");
                 command = new NpgsqlCommand(@"SELECT id, id_pedido, data, data_ultima_alteracao, texto, alteracao 
 FROM anotacao WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<AnotacaoWS> anotacoes = new List<AnotacaoWS>();
@@ -269,7 +270,7 @@ FROM anotacao WHERE alteracao > @alt ORDER BY Id");
                 command = new NpgsqlCommand(@"SELECT id, nome, alteracao 
 FROM vendedor WHERE alteracao > @alt ORDER BY Id");
                 command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaAtualizacao;
-                ds = BancoDeDados.Query(command);
+                ds = bd.Query(command);
                 if (ds == null) return null;
                 dtr = ds.CreateDataReader();
                 List<VendedorWS> vendedores = new List<VendedorWS>();
@@ -290,10 +291,10 @@ FROM vendedor WHERE alteracao > @alt ORDER BY Id");
                 atualizacao.vendedores = vendedores;
                 #endregion
 
-                if (BancoDeDados.CommitTransaction())
+                if (bd.CommitTransaction())
                     return atualizacao;
                 else
-                    BancoDeDados.RollbackTransaction();
+                    bd.RollbackTransaction();
             }
             return null;
         }
