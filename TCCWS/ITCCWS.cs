@@ -101,8 +101,6 @@ namespace TCCWS
         [DataMember]
         public string Id { get; set; }
         [DataMember]
-        public string Numero { get; set; }
-        [DataMember]
         public string IdCliente { get; set; }
         [DataMember]
         public int IdVendedor { get; set; }

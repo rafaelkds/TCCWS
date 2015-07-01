@@ -123,7 +123,7 @@ FROM produto WHERE alteracao > @alt ORDER BY Id");
                     #endregion
 
                     #region Pedido
-                    command = new NpgsqlCommand(@"SELECT id, numero, id_cliente, id_vendedor, valor, data_emissao, data_pagamento, observacoes, alteracao 
+                    command = new NpgsqlCommand(@"SELECT id, id_cliente, id_vendedor, valor, data_emissao, data_pagamento, observacoes, alteracao 
 FROM pedido WHERE alteracao > @alt ORDER BY Id");
                     command.Parameters.Add("alt", NpgsqlDbType.Timestamp).Value = ultimaSincronizacao;
                     ds = bd.Query(command);
@@ -136,17 +136,16 @@ FROM pedido WHERE alteracao > @alt ORDER BY Id");
                         pedidos.Add(new PedidoWS()
                         {
                             Id = dtr.GetString(0),
-                            Numero = dtr.GetString(1),
-                            IdCliente = dtr.GetString(2),
-                            IdVendedor = dtr.GetInt32(3),
-                            Valor = dtr.GetDecimal(4),
-                            DataEmissao = dtr.GetDateTime(5),
-                            DataPagamento = dtr.GetDateTime(6),
-                            Observacoes = dtr.GetString(7)
+                            IdCliente = dtr.GetString(1),
+                            IdVendedor = dtr.GetInt32(2),
+                            Valor = dtr.GetDecimal(3),
+                            DataEmissao = dtr.GetDateTime(4),
+                            DataPagamento = dtr.GetDateTime(5),
+                            Observacoes = dtr.GetString(6)
                         });
-                        if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(8))
+                        if (atualizacao.dtAtualizado == null || atualizacao.dtAtualizado < dtr.GetDateTime(7))
                         {
-                            atualizacao.dtAtualizado = dtr.GetDateTime(8);
+                            atualizacao.dtAtualizado = dtr.GetDateTime(7);
                         }
                         if (buscarIds)
                         {
